@@ -1,0 +1,1 @@
+goworkspacepath="/opt/goworkspace"

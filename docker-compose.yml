@@ -1,0 +1,96 @@
+haproxynode1:
+  image: jayjohnson/haproxy-redis
+  container_name: "haproxynode1"
+  hostname: "haproxynode1"
+  environment:
+    - NODE_TYPE=master
+    - NODE_SUPERVISOR_NAME=haproxy
+    - NODE_EXPOSE_PORT=9000
+    - CLUSTER_NAME=redis-cluster
+    - NUM_INSTANCES=3
+    - BASE_HOSTNAME=redisnode
+    - BASE_REDIS_PORT=9001
+    - BASE_SENTINEL_PORT=19001
+    - CLUSTERED=0
+  ports:
+    - "9000:9000"
+  cap_add:
+    - ALL
+    - NET_ADMIN
+    - SYS_ADMIN
+
+redisnode1:
+  image: jayjohnson/redis-haproxy-clusterable
+  container_name: "redisnode1"
+  hostname: "redisnode1"
+  environment:
+    - CLUSTER_NAME=redis-cluster
+    - NODE_TYPE=master
+    - IP_BIND=0.0.0.0
+    - MASTER_REDIS_HOST=redisnode1
+    - MASTER_REDIS_PORT=9001
+    - REDIS_PORT=9001
+    - SENTINEL_PORT=19001
+    - SENTINEL_INSTANCES_FOR_QUORUM=2
+    - SENTINEL_DOWN_IN_MILLISECONDS=5000
+    - SENTINEL_FAILOVER_TIMEOUT=10000
+    - NODE_REPLICAS=redisnode1:9001 redisnode2:9002 redisnode3:9003
+    - CLUSTERED=0
+  ports:
+    - "9001:9001"
+    - "19001:19001"
+  cap_add:
+    - ALL
+    - NET_ADMIN
+    - SYS_ADMIN
+
+redisnode2:
+  image: jayjohnson/redis-haproxy-clusterable
+  container_name: "redisnode2"
+  hostname: "redisnode2"
+  environment:
+    - CLUSTER_NAME=redis-cluster
+    - NODE_TYPE=node2
+    - IP_BIND=0.0.0.0
+    - MASTER_REDIS_HOST=redisnode1
+    - MASTER_REDIS_PORT=9001
+    - REDIS_PORT=9002
+    - SENTINEL_PORT=19002
+    - SENTINEL_INSTANCES_FOR_QUORUM=2
+    - SENTINEL_DOWN_IN_MILLISECONDS=5000
+    - SENTINEL_FAILOVER_TIMEOUT=10000
+    - NODE_REPLICAS=redisnode1:9001 redisnode2:9002 redisnode3:9003
+    - CLUSTERED=0
+  ports:
+    - "9002:9002"
+    - "19002:19002"
+  cap_add:
+    - ALL
+    - NET_ADMIN
+    - SYS_ADMIN
+
+redisnode3:
+  image: jayjohnson/redis-haproxy-clusterable
+  container_name: "redisnode3"
+  hostname: "redisnode3"
+  environment:
+    - CLUSTER_NAME=redis-cluster
+    - NODE_TYPE=node3
+    - IP_BIND=0.0.0.0
+    - MASTER_REDIS_HOST=redisnode1
+    - MASTER_REDIS_PORT=9001
+    - REDIS_PORT=9003
+    - SENTINEL_PORT=19003
+    - SENTINEL_INSTANCES_FOR_QUORUM=2
+    - SENTINEL_DOWN_IN_MILLISECONDS=5000
+    - SENTINEL_FAILOVER_TIMEOUT=10000
+    - NODE_REPLICAS=redisnode1:9001 redisnode2:9002 redisnode3:9003
+    - CLUSTERED=0
+  ports:
+    - "9003:9003"
+    - "19003:19003"
+  cap_add:
+    - ALL
+    - NET_ADMIN
+    - SYS_ADMIN
+
