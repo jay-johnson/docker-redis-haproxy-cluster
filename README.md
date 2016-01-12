@@ -130,7 +130,7 @@ $
 
 ### Integration with your Clients and Testing Simulated Failovers
 
-The **tests** directory holds scripts to stop/start docker containers, publish messages, read messages as a subscriber, and print the cluster status all through the HAProxy interface. Here you can experiment with how your Redis Client(s) handle failover and disconnections at the HAProxy layer.
+The [tests](https://github.com/jay-johnson/docker-redis-haproxy-cluster/tree/master/tests) directory holds scripts to stop/start docker containers, publish messages, read messages as a subscriber, and print the cluster status all through the HAProxy interface. Here you can experiment with how your Redis Client(s) handle failover and disconnections at the HAProxy layer.
 
 ```
 $ tree tests/
@@ -162,4 +162,10 @@ Stopping redisnode1 ...
 Stopping haproxynode1 ... 
 $
 ```
+
+### License
+
+This is free to use under the MIT LICENSE.
+
+Enjoy.
 
