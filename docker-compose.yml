@@ -36,6 +36,7 @@ redisnode1:
     - SENTINEL_FAILOVER_TIMEOUT=10000
     - NODE_REPLICAS=redisnode1:9001 redisnode2:9002 redisnode3:9003
     - CLUSTERED=0
+    - USE_THIS_REDIS_CONFIG=/container/node/single_replicated_redis.conf
   ports:
     - "9001:9001"
     - "19001:19001"
@@ -61,6 +62,7 @@ redisnode2:
     - SENTINEL_FAILOVER_TIMEOUT=10000
     - NODE_REPLICAS=redisnode1:9001 redisnode2:9002 redisnode3:9003
     - CLUSTERED=0
+    - USE_THIS_REDIS_CONFIG=/container/node/single_replicated_redis.conf
   ports:
     - "9002:9002"
     - "19002:19002"
@@ -86,6 +88,7 @@ redisnode3:
     - SENTINEL_FAILOVER_TIMEOUT=10000
     - NODE_REPLICAS=redisnode1:9001 redisnode2:9002 redisnode3:9003
     - CLUSTERED=0
+    - USE_THIS_REDIS_CONFIG=/container/node/single_replicated_redis.conf
   ports:
     - "9003:9003"
     - "19003:19003"
