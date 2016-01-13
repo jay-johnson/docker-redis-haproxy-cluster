@@ -4,7 +4,7 @@
 
 This repository will start a distributed 3-node replication cluster using Redis, Sentinel and Supervisor using Docker Swarm and Compose for high availability. Access to the Redis cluster is done through HAProxy on TCP Port 9000. HAProxy is configured to discover and stay connected to the Redis Master instance, which means Redis Clients will only need to reconnect while HAProxy handles the discovery of the newly elected master instance. 
 
-![No Message Loss with Redis and HAProxy in a Docker Swarm](https://raw.githubusercontent.com/jay-johnson/docker-redis-haproxy-cluster/master/tests/No_message_loss_with_haproxy_and_redis_in_a_docker_swarm.png)
+![No Message Loss with Redis and HAProxy in a Docker Swarm](https://raw.githubusercontent.com/jay-johnson/docker-redis-haproxy-cluster/master/tests/Testing_that_no_messages_are_lost_with_haproxy_and_redis_in_a_docker_swarm.png)
 
 #### Technical Details
 
