@@ -115,11 +115,10 @@ class RedisWrapper(object):
     def client_kill(self):
 
         try:
-            self.m_redis.client_kill(self.m_address)
+            self.m_redis.connection_pool.get_connection("QUIT").disconnect()
             self.m_state = "Disconnected"
         except Exception, p:
             print "ERROR: Failed to Kill: " + str(self.m_id) + " with Ex(" + str(p) + ")"
-            self.m_redis.connection_pool.get_connection("QUIT").disconnect()
             self.m_state = "Disconnected"
 
         return None
@@ -542,5 +541,5 @@ class RedisWrapper(object):
 
     # end of flush_all
 
-# end of class RedisWrapper(object)
+# end of class RedisWrapper
 
