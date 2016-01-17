@@ -4,7 +4,17 @@
 
 This repository will start a distributed 3-node replication cluster using Redis, Sentinel and Supervisor using Docker Swarm and Compose for high availability. Access to the Redis cluster is done through HAProxy on TCP Port 9000. HAProxy is configured to discover and stay connected to the Redis Master instance, which means Redis Clients will only need to reconnect while HAProxy handles the discovery of the newly elected master instance. 
 
+##### Running Three Replication Clusters on a single AWS EC2 Instance
+
+![3 Redis Replication Clusters on AWS using Docker Swarm](https://raw.githubusercontent.com/jay-johnson/docker-redis-haproxy-cluster/master/tests/running_3_replication_clusters_on_was_using_docker_swarm.png)
+
+I was curious how many Redis replication clusters I could put on one EC2 host, so I built three docker-compose.yml files with unique ports for ensuring no overlap across containers or overlay networks. Then I started testing the caching performance and replication across the cluster. I used an EC2 m2.xlarge and started all three replication clusters running inside a Docker Swarm. At the time of the screenshot, the 3 clusters have been up for 11 hours, the host is mostly idle (around 70%), there is around 2.31 GB cached and replicated across the master Control cluster (ctrlnode1, ctrlnode2, ctrlnode3), and there are 63 persistent connections to the Control cluster. One point to note is that HAProxy is terminating idle Redis connections. This means I had to use the [Retry Connection Support](https://github.com/jay-johnson/docker-redis-haproxy-cluster/blob/7ae69f811fe403c25c4ee54afb5028330569a4ab/tests/redis_wrapper.py#L43) for all my Redis clients to handle and HAProxy disconnection event for idle/outages/failures/something-bad.
+
+#### HA Publisher-Subscriber Message Testing
+
 ![No Message Loss with Redis and HAProxy in a Docker Swarm](https://raw.githubusercontent.com/jay-johnson/docker-redis-haproxy-cluster/master/tests/Testing_that_no_messages_are_lost_with_haproxy_and_redis_in_a_docker_swarm.png)
+
+Here is a sample screenshot from a High Availability message simulation I used to validate this build. This simulation was running a single publisher instance that did a for-loop publishing 100,000 messages by building the buffer before writing to Redis. There were 3 subscribers reading messages in a round-robin sharing method and dequeueing messages sent from the publisher. While this was in action, I manually ran ```docker stop redisnode1``` (or other nodes) to see how the replication cluster handled a critical failure. During testing, I was unable to see any message loss and the publisher and subscribers were automatically [reconnected back](https://github.com/jay-johnson/docker-redis-haproxy-cluster/blob/7ae69f811fe403c25c4ee54afb5028330569a4ab/tests/redis_wrapper.py#L43) to the new Redis Master instance once HAProxy discovered the new Master instance using the Redis Sentinel API. 
 
 #### Technical Details
 
